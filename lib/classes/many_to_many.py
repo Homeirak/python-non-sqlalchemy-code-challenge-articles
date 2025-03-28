@@ -85,6 +85,9 @@ class Author:
         return list(set(article.magazine.category for article in self.articles()))
 
 class Magazine:
+    
+    all = []
+    
     def __init__(self, name, category):
         # self.name = name
         
@@ -97,6 +100,8 @@ class Magazine:
             self._category = category
         else:
             raise Exception("Name must be a non-empty string")
+        
+        Magazine.all.append(self)
         
     @property
     def name(self):
@@ -139,3 +144,9 @@ class Magazine:
 
         result = [author for author, count in author_counts.items() if count > 2]
         return result if result else None
+
+    @classmethod
+    def top_publisher(cls):
+        if not Article.all:
+            return None
+        return max(cls.all, key=lambda mag: len(mag.articles()), default=None)
